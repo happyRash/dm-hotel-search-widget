@@ -1,44 +1,74 @@
+/* =========================
+   DM Widget Base Styles
+   - Default: Transparent theme (no white)
+   - Toggle solid: add .theme-solid on <html>
+   ========================= */
+
 :root {
-  /* Renkler */
+  /* Colors */
   --accent: #3333ff;
   --ink: #0b1620;
   --muted: #6b7280;
-  --bd: #e8eaee;
+  --bd: rgba(255, 255, 255, 0.22);
 
-  /* Cam hissi (blur yok, hızlı) */
+  /* Glass (no pure white) */
   --glass-bg: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.92),
-    rgba(255, 255, 255, 0.86)
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.06)
   );
-  --glass-brd: rgba(255, 255, 255, 0.7);
-  --glass-shadow: 0 10px 24px rgba(16, 24, 40, 0.06),
-    0 2px 6px rgba(16, 24, 40, 0.04);
+  --glass-brd: rgba(255, 255, 255, 0.22);
+  --glass-shadow: 0 10px 24px rgba(16, 24, 40, 0.2),
+    0 2px 6px rgba(16, 24, 40, 0.1);
+
+  /* Solid fallback palette (still not white) */
+  --solid-bg: #0e1b30; /* koyu lacivert zemin */
+  --solid-panel: #16233d; /* koyu panel */
+  --solid-bd: #223251;
+}
+
+/* THEME MODES */
+html.theme-transparent,
+html:not(.theme-solid) {
+  /* Parent sitenin rengini göstersin */
+  background: transparent !important;
+}
+html.theme-solid {
+  background: var(--solid-bg) !important;
 }
 
 * {
   box-sizing: border-box;
 }
+
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: #f6f7f9;
+  /* Transparent mode’da hiçbir arkaplan verme */
+  background: transparent !important;
   margin: 0;
   padding: 16px;
   color: var(--ink);
 }
 
-/* Kutu */
+/* Container */
 .dm-wrap {
   max-width: 980px;
   margin: 0 auto;
   padding: 16px;
   border-radius: 16px;
-  background: var(--glass-bg);
+  background: var(--glass-bg); /* saydam cam */
   border: 1px solid var(--glass-brd);
   box-shadow: var(--glass-shadow);
 }
 
-/* Sekmeler */
+/* Solid mode’da panelleri koyulaştır */
+html.theme-solid .dm-wrap {
+  background: var(--solid-panel);
+  border-color: var(--solid-bd);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+}
+
+/* Tabs */
 .dm-tabs {
   display: flex;
   gap: 10px;
@@ -46,27 +76,27 @@ body {
 }
 .dm-tab {
   appearance: none;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   background: var(--glass-bg);
   color: var(--accent);
   padding: 10px 18px;
   border-radius: 12px;
   cursor: pointer;
   font-weight: 700;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 6px 16px rgba(16, 24, 40, 0.06);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 6px 16px rgba(16, 24, 40, 0.14);
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
     box-shadow 0.2s ease;
 }
 .dm-tab:hover {
-  border-color: #d9e0e7;
+  border-color: rgba(255, 255, 255, 0.25);
 }
 .dm-tab.active {
   background: linear-gradient(180deg, var(--accent), #2d2dd9);
   color: #fff;
   border-color: transparent;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset,
-    0 8px 20px rgba(51, 51, 255, 0.28);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 8px 20px rgba(51, 51, 255, 0.35);
 }
 
 /* Form grid */
@@ -96,7 +126,7 @@ body {
   align-items: center;
 }
 
-/* Link */
+/* Link (turuncu, kontrast yüksek) */
 .dm-link {
   color: #f5a400;
   text-decoration: none;
@@ -106,39 +136,49 @@ body {
   text-decoration: underline;
 }
 
-/* Input & Select (cam görünüm) */
+/* Inputs & selects: cam görünümlü, beyaz yok */
 input[type="text"],
 select {
   height: 46px;
   padding: 0 14px;
   font-size: 16px;
   color: var(--ink);
-  background: var(--glass-bg);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.06)
+  );
   border: 1px solid var(--bd);
   border-radius: 12px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75),
-    0 4px 12px rgba(16, 24, 40, 0.04);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 4px 12px rgba(16, 24, 40, 0.12);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+html.theme-solid input[type="text"],
+html.theme-solid select {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--solid-bd);
 }
 input::placeholder {
-  color: #b8bec7;
+  color: #9aa6b2;
 }
 input:focus,
 select:focus {
   outline: none;
-  border-color: rgba(51, 51, 255, 0.45);
-  box-shadow: 0 0 0 2px rgba(51, 51, 255, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-color: rgba(51, 51, 255, 0.55);
+  box-shadow: 0 0 0 2px rgba(51, 51, 255, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
 }
 
-/* Inline grup */
+/* Inline group */
 .dm-inline {
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
-/* Buton */
+/* Button */
 .dm-submit {
   appearance: none;
   display: inline-flex;
@@ -152,25 +192,23 @@ select:focus {
   font-weight: 800;
   letter-spacing: 0.2px;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(51, 51, 255, 0.28);
+  box-shadow: 0 6px 20px rgba(51, 51, 255, 0.35);
   transition: transform 0.06s ease, box-shadow 0.15s ease, filter 0.15s ease;
   width: auto;
-  justify-self: end; /* grid içinde genişlemesin */
+  justify-self: end;
 }
 .dm-submit:hover {
-  box-shadow: 0 8px 26px rgba(51, 51, 255, 0.34);
+  box-shadow: 0 8px 26px rgba(51, 51, 255, 0.42);
   filter: saturate(1.05);
 }
 .dm-submit:active {
   transform: scale(0.985);
 }
 
-/* Gizli yardımcı */
+/* Helpers */
 .dm-hidden {
   display: none;
 }
-
-/* Checkbox */
 .dm-checkbox {
   display: flex;
   align-items: center;
@@ -206,7 +244,7 @@ select:focus {
   top: 100%;
   z-index: 9999;
   background: var(--glass-bg);
-  border: 1px solid var(--bd);
+  border: 1px solid var(--glass-brd);
   border-radius: 12px;
   margin-top: 6px;
   max-height: 220px;
@@ -214,6 +252,11 @@ select:focus {
   padding: 6px 0;
   display: none;
   box-shadow: var(--glass-shadow);
+}
+html.theme-solid .dm-ac-list {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--solid-bd);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
 }
 .dm-ac-list.show {
   display: block;
@@ -227,7 +270,7 @@ select:focus {
 }
 .dm-ac-item:hover,
 .dm-ac-item[aria-selected="true"] {
-  background: #f1fbfd;
+  background: rgba(51, 102, 255, 0.1);
 }
 .dm-ac-item small {
   color: #94a3b8;
@@ -235,9 +278,9 @@ select:focus {
 .dm-type {
   font-size: 0.75rem;
   padding: 2px 6px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #304567;
   border-radius: 999px;
-  color: #64748b;
+  color: #8aa4c9;
 }
 
 /* Responsive */
