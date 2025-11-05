@@ -3,7 +3,7 @@ const CONFIG = {
   hotel: {
     redirect: "/iletisim",
     utm: "utm_source=widget&utm_medium=hotel",
-    whatsapp: "905449137827", // "90555xxxxxxx" girerseniz WhatsApp'a gider
+    whatsapp: "905449137827", // WhatsApp'a gider
   },
   transfer: {
     redirect: "/iletisim",
