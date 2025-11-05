@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DM Hotel & Transfer Widget</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Flatpickr -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+  </head>
+  <body>
+    <div class="dm-wrap" id="dmWidget">
+      <div class="dm-tabs" role="tablist" aria-label="search type">
+        <button class="dm-tab active" data-tab="hotel" type="button">
+          oda
+        </button>
+        <button class="dm-tab" data-tab="transfer" type="button">
+          transfer
+        </button>
+      </div>
+
+      <!-- HOTEL FORM -->
+      <form class="dm-form" id="hotelForm" autocomplete="off">
+        <div class="dm-field">
+          <label for="hotelName">otel</label>
+          <input
+            id="hotelName"
+            type="text"
+            placeholder="Otelinizin İsmi"
+            required
+          />
+        </div>
+
+        <div class="dm-grid dm-grid-2">
+          <div class="dm-field">
+            <label for="hotelDates">giriş tarihi / çıkış tarihi</label>
+            <input
+              id="hotelDates"
+              type="text"
+              placeholder="gg.aa.yyyy – gg.aa.yyyy"
+              required
+            />
+          </div>
+
+          <div class="dm-field">
+            <div class="dm-label-row">
+              <label>oda / kişi</label>
+              <a class="dm-link" href="#" id="availabilityLink"
+                >oda müsaitlik durumu »</a
+              >
+            </div>
+            <div class="dm-inline">
+              <select id="hotelRooms" aria-label="rooms">
+                <option value="1" selected>1 oda</option>
+                <option value="2">2 oda</option>
+                <option value="3">3 oda</option>
+              </select>
+              <select id="hotelGuests" aria-label="guests">
+                <option value="1">1 kişi</option>
+                <option value="2" selected>2 kişi</option>
+                <option value="3">3 kişi</option>
+                <option value="4">4 kişi</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button class="dm-submit" type="submit">
+          ARA <span aria-hidden="true">➜</span>
+        </button>
+      </form>
+
+      <!-- TRANSFER FORM -->
+      <form class="dm-form dm-hidden" id="transferForm" autocomplete="off">
+        <div class="dm-grid dm-grid-2">
+          <div class="dm-field">
+            <label for="pickup">nereden</label>
+            <div class="dm-autocomplete">
+              <input id="pickup" type="text" placeholder="nereden" required />
+              <button
+                class="dm-clear"
+                type="button"
+                title="temizle"
+                aria-label="temizle"
+              >
+                ×
+              </button>
+              <ul
+                class="dm-ac-list"
+                id="acPickup"
+                role="listbox"
+                aria-label="öneriler"
+              ></ul>
+            </div>
+          </div>
+
+          <div class="dm-field">
+            <label for="transferHotel">otel</label>
+            <input
+              id="transferHotel"
+              type="text"
+              placeholder="Otelinizin İsmi"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="dm-grid dm-grid-2">
+          <div class="dm-field">
+            <div class="dm-label-row">
+              <label for="transferDate">giriş tarihi / çıkış tarihi</label>
+              <label class="dm-checkbox"
+                ><input id="isReturn" type="checkbox" /> Dönüş</label
+              >
+            </div>
+            <div class="dm-grid dm-grid-2 inner">
+              <input
+                id="transferDate"
+                type="text"
+                placeholder="gg.aa.yyyy"
+                required
+              />
+              <input
+                id="returnDate"
+                class="dm-hidden"
+                type="text"
+                placeholder="gg.aa.yyyy"
+              />
+            </div>
+          </div>
+
+          <div class="dm-field">
+            <label for="transferPax">kişi</label>
+            <select id="transferPax">
+              <option value="1">1 kişi</option>
+              <option value="2" selected>2 kişi</option>
+              <option value="3">3 kişi</option>
+              <option value="4">4 kişi</option>
+              <option value="5">5 kişi</option>
+              <option value="6">6 kişi</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="dm-submit" type="submit">
+          ARA <span aria-hidden="true">➜</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/tr.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
