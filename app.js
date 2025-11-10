@@ -8,10 +8,11 @@ const CONFIG = {
   transfer: {
     redirect: "/iletisim",
     utm: "utm_source=widget&utm_medium=transfer",
-    whatsapp: "",
+    whatsapp: "905449137827", // istersen buraya da numara gir
   },
 };
-// URL ile override (?redirect=/baska-sayfa)
+
+/* ========= URL override (?redirect=/baska-sayfa) ========= */
 const qp = new URLSearchParams(location.search);
 if (qp.get("redirect")) {
   CONFIG.hotel.redirect = qp.get("redirect");
@@ -39,8 +40,7 @@ tabBtns.forEach((btn) => {
   });
 });
 
-/* ========= Datepickers ========= */
-const nightsLabel = document.createElement("div"); // (gerekirse kullanılabilir)
+/* ========= Datepickr ========= */
 const fpHotel = flatpickr("#hotelDates", {
   mode: "range",
   dateFormat: "d.m.Y",
@@ -61,18 +61,15 @@ const fpReturnDate = flatpickr("#returnDate", {
 });
 document.getElementById("isReturn").addEventListener("change", (e) => {
   const ret = document.getElementById("returnDate");
-  if (e.target.checked) {
-    ret.classList.remove("dm-hidden");
-  } else {
+  if (e.target.checked) ret.classList.remove("dm-hidden");
+  else {
     ret.classList.add("dm-hidden");
     ret.value = "";
   }
 });
 
-/* ========= Autocomplete (TR airports + bus terminals) ========= */
-/* Not: Listeyi ihtiyaca göre genişletebilirsiniz. type: "airport" | "bus" */
+/* ========= Autocomplete (TR airports + bus) ========= */
 const TR_LOCATIONS = [
-  // --- Airports ---
   {
     code: "IST",
     name: "İstanbul Havalimanı",
@@ -121,7 +118,7 @@ const TR_LOCATIONS = [
   {
     code: "GZP",
     name: "Gazipaşa-Alanya Havalimanı",
-    city: "Antalya",
+    city: "Alanya",
     type: "airport",
   },
   {
@@ -138,7 +135,6 @@ const TR_LOCATIONS = [
     type: "airport",
   },
   { code: "HTY", name: "Hatay Havalimanı", city: "Hatay", type: "airport" },
-  // --- Bus terminals ---
   { code: "OTOGAR-ANT", name: "Antalya Otogarı", city: "Antalya", type: "bus" },
   {
     code: "OTOGAR-IST",
@@ -179,9 +175,7 @@ let acIndex = -1;
 pickupInput.addEventListener("input", onAcInput);
 pickupInput.addEventListener("keydown", onAcKey);
 document.addEventListener("click", (e) => {
-  if (!pickupList.contains(e.target) && e.target !== pickupInput) {
-    hideAc();
-  }
+  if (!pickupList.contains(e.target) && e.target !== pickupInput) hideAc();
 });
 clearBtn.addEventListener("click", () => {
   pickupInput.value = "";
@@ -206,7 +200,6 @@ function onAcInput() {
   }).slice(0, 8);
   renderAc(results);
 }
-
 function renderAc(items) {
   pickupList.innerHTML = "";
   if (items.length === 0) {
@@ -233,7 +226,6 @@ function renderAc(items) {
   pickupList.classList.add("show");
   acIndex = -1;
 }
-
 function onAcKey(e) {
   const items = [...pickupList.querySelectorAll(".dm-ac-item")];
   if (!pickupList.classList.contains("show")) return;
@@ -245,14 +237,10 @@ function onAcKey(e) {
     e.preventDefault();
     acIndex = Math.max(0, acIndex - 1);
     updateActive(items);
-  } else if (e.key === "Enter") {
-    if (acIndex > -1) {
-      e.preventDefault();
-      items[acIndex].click();
-    }
-  } else if (e.key === "Escape") {
-    hideAc();
-  }
+  } else if (e.key === "Enter" && acIndex > -1) {
+    e.preventDefault();
+    items[acIndex].click();
+  } else if (e.key === "Escape") hideAc();
 }
 function updateActive(items) {
   items.forEach((el, i) => el.setAttribute("aria-selected", i === acIndex));
@@ -271,8 +259,30 @@ function hideAc() {
 function normalize(s) {
   return s.toLowerCase().replaceAll("ı", "i").replaceAll("İ", "i");
 }
+function score(it, q) {
+  const c = normalize(it.city),
+    n = normalize(it.name),
+    code = normalize(it.code);
+  let s = 0;
+  if (c.startsWith(q)) s += 3;
+  if (n.startsWith(q)) s += 2;
+  if (c.includes(q)) s += 1;
+  if (n.includes(q)) s += 1;
+  if (code.startsWith(q)) s += 2;
+  return s;
+}
 
-/* ========= Submit: redirect/WhatsApp ========= */
+function onAcInput() {
+  const q = normalize(pickupInput.value.trim());
+  const results = TR_LOCATIONS.filter((it) =>
+    normalize(`${it.city} ${it.name} ${it.code}`).includes(q)
+  )
+    .sort((a, b) => score(b, q) - score(a, q))
+    .slice(0, 8);
+  renderAc(results);
+}
+
+/* ========= Submit: redirect / WhatsApp ========= */
 hotelForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const hotel = document.getElementById("hotelName").value.trim();
@@ -281,57 +291,79 @@ hotelForm.addEventListener("submit", (e) => {
     alert("Lütfen giriş ve çıkış tarihlerini seçin.");
     return;
   }
-  const ci = toISO(sel[0]);
-  const co = toISO(sel[1]);
-  const rooms = document.getElementById("hotelRooms").value;
-  const guests = document.getElementById("hotelGuests").value;
 
+  // UTM ve diğer bilgiler yine URL'de dursun (analitik için)
   const qs = new URLSearchParams({
     type: "hotel",
     hotel,
-    checkin: ci,
-    checkout: co,
-    rooms,
-    guests,
+    checkin: toISO(sel[0]),
+    checkout: toISO(sel[1]),
+    rooms: document.getElementById("hotelRooms").value,
+    guests: document.getElementById("hotelGuests").value,
     utm: CONFIG.hotel.utm,
   });
-  go(CONFIG.hotel, qs, { hotel, ci, co, rooms, guests });
+
+  // >>> Sadece şu kısa metni gönder <<<
+  const textOverride = `Merhaba ${hotel} için bilgi almak istiyorum.`;
+
+  go(CONFIG.hotel, qs, { textOverride });
 });
 
 transferForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const from = document.getElementById("pickup").value.trim();
   const hotel = document.getElementById("transferHotel").value.trim();
-  const date = toISO(fpTransferDate.selectedDates[0] || new Date());
   const isRet = document.getElementById("isReturn").checked;
-  const rDate = isRet
-    ? toISO(fpReturnDate.selectedDates[0] || new Date(Date.now() + 86400000))
-    : "";
-  const pax = document.getElementById("transferPax").value;
 
   const qs = new URLSearchParams({
     type: "transfer",
     from,
     hotel,
-    date,
-    return: isRet ? rDate : "",
-    pax,
+    date: toISO(fpTransferDate.selectedDates[0] || new Date()),
+    return: isRet
+      ? toISO(fpReturnDate.selectedDates[0] || new Date(Date.now() + 86400000))
+      : "",
+    pax: document.getElementById("transferPax").value,
     utm: CONFIG.transfer.utm,
   });
-  go(CONFIG.transfer, qs, { from, hotel, date, rDate, pax });
+
+  // >>> Transfer için kısa mesaj <<<
+  const textOverride = `Merhaba, ${from} → ${hotel} transferi için bilgi almak istiyorum.`;
+
+  go(CONFIG.transfer, qs, { textOverride });
 });
 
 function go(cfg, qs, msgObj) {
   if (cfg.whatsapp) {
-    const text = Object.entries(msgObj)
-      .map(([k, v]) => `${k}: ${v}`)
-      .join("\n");
-    location.href = `https://wa.me/${cfg.whatsapp}?text=${encodeURIComponent(
+    // textOverride varsa onu kullan; yoksa ayrıntılı listeye düş
+    const text =
+      msgObj?.textOverride ??
+      Object.entries(msgObj)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join("\n");
+    const url = `https://wa.me/${cfg.whatsapp}?text=${encodeURIComponent(
       text
     )}`;
+    openInNewTab(url);
   } else {
     const target = cfg.redirect.replace(/\/$/, "");
-    location.href = `${target}?${qs.toString()}`;
+    const url = `${target}?${qs.toString()}`;
+    openInNewTab(url);
+  }
+}
+
+/* ========= Helpers ========= */
+function openInNewTab(url) {
+  const w = window.open(url, "_blank", "noopener");
+  if (w) w.opener = null;
+  else {
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 }
 function toISO(d) {
@@ -340,8 +372,21 @@ function toISO(d) {
     .slice(0, 10);
 }
 
-/* (Opsiyonel) “oda müsaitlik durumu” linki davranışı */
+/* ========= Opsiyonel: “oda müsaitlik durumu” linki ========= */
 document.getElementById("availabilityLink").addEventListener("click", (e) => {
   e.preventDefault();
   alert("Burayı kendi sayfanıza yönlendirebilirsiniz.");
 });
+
+/* ========= Opsiyonel: Custom validity Türkçe ========= */
+function setMsg(el, msg) {
+  el.addEventListener("invalid", () => el.setCustomValidity(msg));
+  el.addEventListener("input", () => el.setCustomValidity(""));
+}
+setMsg(document.getElementById("hotelName"), "Lütfen otelinizin ismini yazın.");
+setMsg(
+  document.getElementById("hotelDates"),
+  "Lütfen giriş ve çıkış tarihlerini seçin."
+);
+setMsg(document.getElementById("pickup"), "Lütfen nereden alacağınızı yazın.");
+setMsg(document.getElementById("transferHotel"), "Lütfen otel adını yazın.");

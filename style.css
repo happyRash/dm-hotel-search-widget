@@ -7,21 +7,21 @@
 :root {
   --accent: #3333ff;
   --ink: #0b1620;
-  --muted: #6b7280;
+  --muted: #373a42;
   --bd: rgba(255, 255, 255, 0.35);
 
   /* 🔹 Beyaz saydam cam efekti */
   --glass-bg: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.85),
-    rgba(255, 255, 255, 0.65)
+    rgba(255, 255, 255, 0.929),
+    rgba(255, 255, 255, 0.85)
   );
   --glass-brd: rgba(255, 255, 255, 0.4);
   --glass-shadow: 0 12px 32px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.08);
 
   /* Solid fallback */
   --solid-bg: #f5f7fb;
-  --solid-panel: #ffffffcc;
+  --solid-panel: #fff;
   --solid-bd: rgba(0, 0, 0, 0.08);
 }
 
@@ -90,8 +90,8 @@ html.theme-solid .dm-wrap {
 .dm-tab.active {
   background: linear-gradient(180deg, var(--accent), #2d2dd9);
   color: #fff;
-  border-color: transparent;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset,
+  border-color: whitesmoke;
+  box-shadow: 0 1px 0 rgba(255, 255, 255) inset,
     0 8px 20px rgba(51, 51, 255, 0.35);
 }
 
@@ -148,8 +148,6 @@ select {
   border-radius: 12px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18),
     0 4px 12px rgba(16, 24, 40, 0.12);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease,
-    background 0.15s ease;
 }
 html.theme-solid input[type="text"],
 html.theme-solid select {
@@ -189,7 +187,6 @@ select:focus {
   letter-spacing: 0.2px;
   cursor: pointer;
   box-shadow: 0 6px 20px rgba(51, 51, 255, 0.35);
-  transition: transform 0.06s ease, box-shadow 0.15s ease, filter 0.15s ease;
   width: auto;
   justify-self: end;
 }
@@ -198,7 +195,7 @@ select:focus {
   filter: saturate(1.05);
 }
 .dm-submit:active {
-  transform: scale(0.985);
+  transform: scale(1);
 }
 
 /* Helpers */
@@ -221,7 +218,6 @@ select:focus {
   position: absolute;
   right: 8px;
   top: 50%;
-  transform: translateY(-50%);
   border: none;
   background: transparent;
   font-size: 18px;
@@ -239,7 +235,7 @@ select:focus {
   right: 0;
   top: 100%;
   z-index: 9999;
-  background: var(--glass-bg);
+  background: rgba(255, 255, 255, 0.98) !important;
   border: 1px solid var(--glass-brd);
   border-radius: 12px;
   margin-top: 6px;
@@ -258,24 +254,22 @@ html.theme-solid .dm-ac-list {
   display: block;
 }
 .dm-ac-item {
-  padding: 10px 12px;
+  padding: 10px 10px;
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: 2px;
   cursor: pointer;
 }
-.dm-ac-item:hover,
+.dm-ac-item:after,
 .dm-ac-item[aria-selected="true"] {
   background: rgba(51, 102, 255, 0.1);
 }
 .dm-ac-item small {
-  color: #94a3b8;
+  color: #2f3b4b;
 }
 .dm-type {
-  font-size: 0.75rem;
+  font-size: 0.55rem;
   padding: 2px 6px;
-  border: 1px solid #304567;
-  border-radius: 999px;
   color: #8aa4c9;
 }
 
