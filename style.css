@@ -5,26 +5,24 @@
    ========================= */
 
 :root {
-  /* Colors */
   --accent: #3333ff;
   --ink: #0b1620;
   --muted: #6b7280;
-  --bd: rgba(255, 255, 255, 0.22);
+  --bd: rgba(255, 255, 255, 0.35);
 
-  /* Glass (no pure white) */
+  /* 🔹 Beyaz saydam cam efekti */
   --glass-bg: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0.06)
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0.65)
   );
-  --glass-brd: rgba(255, 255, 255, 0.22);
-  --glass-shadow: 0 10px 24px rgba(16, 24, 40, 0.2),
-    0 2px 6px rgba(16, 24, 40, 0.1);
+  --glass-brd: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 12px 32px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.08);
 
-  /* Solid fallback palette (still not white) */
-  --solid-bg: #0e1b30; /* koyu lacivert zemin */
-  --solid-panel: #16233d; /* koyu panel */
-  --solid-bd: #223251;
+  /* Solid fallback */
+  --solid-bg: #f5f7fb;
+  --solid-panel: #ffffffcc;
+  --solid-bd: rgba(0, 0, 0, 0.08);
 }
 
 /* THEME MODES */
@@ -85,8 +83,6 @@ html.theme-solid .dm-wrap {
   font-weight: 700;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset,
     0 6px 16px rgba(16, 24, 40, 0.14);
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
-    box-shadow 0.2s ease;
 }
 .dm-tab:hover {
   border-color: rgba(255, 255, 255, 0.25);
